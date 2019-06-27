@@ -1,0 +1,2 @@
+--either using regex or using own funcions make combinations using the alphabets entered by user and the alphabets available in the board
+--output will be a array of (word,starting_coordinate,ending_coordinate,horizontal/vertical)
