@@ -1,6 +1,23 @@
---  module Scrabble.Board.Board
---    (
---    ) where
+ module Scrabble.Board
+   (
+       initialBoard,
+       Board,
+       Point,
+       aboveP,
+       belowP,
+       leftOfP,
+       rightOfP,
+       allAboveP,
+       allBelowP,
+       allLeftOfP,
+       allRightOfP,
+       neighbors4P,
+       strBoard,
+       boardPoints,
+       showBoard,
+       splitEvery,
+       printBoard
+   ) where
 import Data.List
 
 --datatype of a board
