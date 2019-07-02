@@ -1,12 +1,12 @@
 module Points
   (
-      module Board,
+      module Board_new,
       getScore,
       calcScore,
       pointLst,
   ) where
     
-import Board
+import Board_new
 
 pointLst :: [Char]->[Int]
 pointLst x = map (getScore) x
@@ -29,6 +29,7 @@ getScore a
     | otherwise = 0
 --takes a list of words and sorts them acc to points
 sortWords :: [String] -> [String]
+sortWords [] = []
 sortWords (x:xs) =
     let leftSorted = sortWords [a | a <- xs , (calcScore a) <= (calcScore x)]
         rightSorted = sortWords [a | a <- xs , (calcScore a) > (calcScore x)]
