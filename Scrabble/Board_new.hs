@@ -1,4 +1,4 @@
- module Scrabble.Board
+ module Board_new
    (
        initialBoard,
        Board,

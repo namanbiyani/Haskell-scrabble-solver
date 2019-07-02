@@ -1,4 +1,18 @@
+module Possible_permutations
+(
+    module Board_new,
+    findAllPermutations,
+    findEmptyPoints,
+    findNonEmptyPoints,
+    firstList,
+    getACombin,
+    genPossibleFilling,
+)
+where
+
 import Data.List
+import Board_new
+
 
 --This function finds the points that are not filled and returns a list of them
 findEmptyPoints:: [((Int,Int),Char)]->[((Int,Int),Char)]
@@ -28,3 +42,5 @@ findAllPermutations pointAndStatus listOfPossChars = do
                                                      let ys = findNonEmptyPoints pointAndStatus
                                                      let possFills = genPossibleFilling xs listOfPossChars
                                                      map (++ ys) possFills
+
+                                                     
