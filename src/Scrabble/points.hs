@@ -1,4 +1,19 @@
 --copyright: Guntas Singh Brar...... :-p lol
+module Scrabble.Points
+  (
+      module Scrabble.Board,
+      getScore,
+      getScore2,
+      getScore3,
+      getScore4,
+      getScore5,
+      getScore8,
+      getScore10,
+      calcScore,
+      pointLst,
+  ) where
+    
+import Scrabble.Board
 
 --letters with score 1
 getScore :: Char->Int
