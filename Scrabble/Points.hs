@@ -1,7 +1,7 @@
 --copyright: Guntas Singh Brar...... :-p lol
-module Scrabble.Points
+module Points
   (
-      module Scrabble.Board,
+      module Board,
       getScore,
       getScore2,
       getScore3,
@@ -13,7 +13,7 @@ module Scrabble.Points
       pointLst,
   ) where
     
-import Scrabble.Board
+import Board
 
 --letters with score 1
 getScore :: Char->Int

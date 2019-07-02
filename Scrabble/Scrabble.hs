@@ -1,9 +1,22 @@
+
 module Scrabble (
-   module Scrabble.Board,
+   module Points,
+   module Possible_permutations,
+   module DictSearch,
+   module Sort,
+   module Change_board, 
+   module Board_new,
+   module Bonus,
 ) where
 
-import Scrabble.Board
+import Board_new
+import Points
+import Possible_permutations
+import DictSearch
+import Sort
+import Change_board
 import System.Random
+import Data.List
 
 randomChar :: Int->Char
 randomChar x =  ['a'..'z'] !! (mod x 26) 
@@ -50,7 +63,7 @@ game2Player initialBoard = do
                              coordinate <- getLine
                              putStrLn "Enter orientation (H for horizontal and V for vertical)"
                              orientation <- getLine
-                             newboard = addWord initialBoard word coordinate orientation
+                            --  newboard = addWord initialBoard word coordinate orientation
                              game2Player newboard
                         else
                             do putStrLn "Form a word using the table and the following words"
@@ -58,6 +71,44 @@ game2Player initialBoard = do
                                putStrLn input
                                putStrLn "Enter your word : "
                                word <- getLine
+
+gameWithComputer initialBoard = do
+    putStrLn "Enter 1 to display Board"
+    putStrLn "Enter 2 to add a word to the existing Board"
+    putStrLn "Enter 3 to input letters for computer"
+    line <- getLine
+    if null line
+        then return()
+    else
+        if line == "1"
+            then do 
+                printBoard initialBoard
+                return ()
+        else
+            if line == "2"
+                then do
+                    putStrLn "Enter word to be added to the board"
+                    word <- getLine
+                    putStrLn "Enter coordinate of the starting index of the word ( (0,0) denotes \nthe top left box and (12,12) denotes the bottom right box"
+                    coordinate <- getLine
+                    putStrLn "Enter orientation (H for horizontal and V for vertical)"
+                    orientation <- getLine
+                    -- newboard = addWord initialBoard word coordinate orientation
+                    game2Player newboard
+                else
+                    do 
+                       putStrLn "Enter 7 letters for me to form a word"
+                       letters <- getLine
+                       if (length letters) /= 7
+                            then do 
+                                putStrLn "Game Over as you didn't enter 7 letters"
+                       else 
+                            return ()
+                    --    form possible words , score calculation and adding word to Board 
+                       return () 
+                                 
+
+
                                
 
 input:: IO ()

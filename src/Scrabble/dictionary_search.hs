@@ -1,4 +1,0 @@
---file which contains efficient search functions to search if the possible combinations of words formed are valid .
--- ways :
--- 1. divide dictionary according to starting letter and then search for a particular word only in that particular dictionary
--- 2. searching validity of words in descending order of the scores of that particular word
