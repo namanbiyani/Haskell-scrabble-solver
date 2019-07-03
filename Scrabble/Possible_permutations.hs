@@ -9,25 +9,25 @@ module Possible_permutations
     genPossibleFilling,
 )
 where
-
-import Data.List
-import Board_new
-
+    import Data.List
+    import Board_new
 
 --This function finds the points that are not filled and returns a list of them
-findEmptyPoints:: [((Int,Int),Char)]->[((Int,Int),Char)]
+findEmptyPoints :: [((Int,Int),Char)]->[((Int,Int),Char)]
 findEmptyPoints pointAndStatus = [(point,status)|(point, status)<-pointAndStatus, status == '*']     --Checked
 
 --This function finds and returns a list of all the points that are filled
-findNonEmptyPoints:: [((Int,Int),Char)]->[((Int,Int),Char)]
+findNonEmptyPoints :: [((Int,Int),Char)]->[((Int,Int),Char)]
 findNonEmptyPoints pointAndStatus = [(point,status)|(point, status)<- pointAndStatus, status /= '*']  --Checked
 
 --This takes a list with elements (points, char) and returns a list containing points
+firstList :: [((Int,Int),Char)] -> [(Int,Int)]
 firstList [] = []
 firstList xs = [fst (head xs)] ++ firstList (tail xs)
 
 -- This function takes a list of points which are not yet filled and list of possible characters to be filled and returns a
 -- possible combination of filled points
+getACombin :: [((Int,Int),Char)] -> [Char] -> [((Int,Int),Char)]
 getACombin emptyPointList x = zip (firstList emptyPointList) x 
 
 -- This function takes a list of points and a list of possible characters to fill and generate all possible combinations of them
@@ -43,4 +43,5 @@ findAllPermutations pointAndStatus listOfPossChars = do
                                                      let possFills = genPossibleFilling xs listOfPossChars
                                                      map (++ ys) possFills
 
-                                                     
+delete x xs = [y | y <- xs , y /= x]
+permutations xs = if length xs == 0 then [[]] else [x:ys | x <- xs, ys <- permutations $ delete x xs]
