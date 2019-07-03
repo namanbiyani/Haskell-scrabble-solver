@@ -3,17 +3,17 @@ module Scrabble (
    module Points,
    module Possible_permutations,
    module DictSearch,
-   module Sort,
    module Change_board, 
    module Board_new,
    module Bonus,
+   module Filter,
 ) where
 
 import Board_new
 import Points
 import Possible_permutations
 import DictSearch
-import Sort
+import Filter
 import Change_board
 import System.Random
 import Data.List
