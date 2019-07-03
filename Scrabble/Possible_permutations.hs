@@ -32,7 +32,7 @@ getACombin emptyPointList x = zip (firstList emptyPointList) x
 
 -- This function takes a list of points and a list of possible characters to fill and generate all possible combinations of them
 --filled
-genPossibleFilling emptyPointList listOfPossChars = [getACombin emptyPointList x|x<- permutations listOfPossChars]
+genPossibleFilling emptyPointList listOfPossChars = [getACombin emptyPointList x|x<- permutations' listOfPossChars]
 
 --This is the main function to be called. We need to pass array of points and corresponding characters filled there and a list of
 --possible alphabets that can be filled. It filters points which are empty and returns list of all possible combinations in which
@@ -43,5 +43,5 @@ findAllPermutations pointAndStatus listOfPossChars = do
                                                      let possFills = genPossibleFilling xs listOfPossChars
                                                      map (++ ys) possFills
 
-delete x xs = [y | y <- xs , y /= x]
-permutations xs = if length xs == 0 then [[]] else [x:ys | x <- xs, ys <- permutations $ delete x xs]
+delete' x xs = [y | y <- xs , y /= x]
+permutations' xs = if length xs == 0 then [[]] else [x:ys | x <- xs, ys <- permutations' $ delete' x xs]
