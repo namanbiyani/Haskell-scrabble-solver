@@ -1,13 +1,19 @@
 
 module Change_Board (
-   module Scrabble.Board, 
+   module Board_new, 
    prevBoard,
    nexBoard,
    newBoard,
    toInt,
-   addBoard,
+   inputBoard,
+   putWordAcrs,
+   putWordDown,
+   mkBoardStrA,
+   mkBoardStrD,
+   pointListAcrs,
+   pointListDwn,
 ) where
-import Scrabble.Board
+import Board_new
 import Data.List
 
 --[*****************************INPUT A LETTER IN THE BOARD*****************************]

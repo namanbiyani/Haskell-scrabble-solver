@@ -4,6 +4,7 @@ module Points
       getScore,
       calcScore,
       pointLst,
+      sortWords,
   ) where
     
 import Board_new
@@ -27,6 +28,7 @@ getScore a
     | elem a ['J','X'] = 8
     | elem a ['Q','Z'] = 10
     | otherwise = 0
+    
 --takes a list of words and sorts them acc to points
 sortWords :: [String] -> [String]
 sortWords [] = []

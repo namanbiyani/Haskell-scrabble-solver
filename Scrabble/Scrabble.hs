@@ -7,6 +7,12 @@ module Scrabble (
    module Board_new,
    module Bonus,
    module Filter,
+   randomChar,
+   input,
+   game2Player,
+   gameWithComputer,
+   listOfTuplesH,
+   listOfTuplesV,
 ) where
 
 import Board_new
@@ -17,6 +23,13 @@ import Filter
 import Change_board
 import System.Random
 import Data.List
+import Data.Map
+import System.IO
+import System.IO.Unsafe
+import Data.Char
+
+--putWordAcrs function , (Integer,Integer,Integer) -> [Char] -> [((Integer,Integer),Char)] -> [((Integer,Integer),Char)]
+--putWordDown :: (Integer,Integer,Integer) -> [Char] -> [((Integer,Integer),Char)] -> [((Integer,Integer),Char)]
 
 randomChar :: Int->Char
 randomChar x =  ['a'..'z'] !! (mod x 26) 
@@ -63,7 +76,17 @@ game2Player initialBoard = do
                              coordinate <- getLine
                              putStrLn "Enter orientation (H for horizontal and V for vertical)"
                              orientation <- getLine
-                            --  newboard = addWord initialBoard word coordinate orientation
+                             -- check if word addition is possible there
+                             -- check if word is correct
+                             if orientation == "H"
+                                then do
+                                    let newboard = putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                                    return ()
+                                else do
+                                    newboard = putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
+                                    return () 
+                             putStrLn "Modified Board is .............."
+                             printBoard newboard
                              game2Player newboard
                         else
                             do putStrLn "Form a word using the table and the following words"
@@ -71,6 +94,25 @@ game2Player initialBoard = do
                                putStrLn input
                                putStrLn "Enter your word : "
                                word <- getLine
+                               putStrLn "Enter coordinate of the starting index of the word ( (0,0) denotes \nthe top left box and (12,12) denotes the bottom right box"
+                               coordinate <- getLine
+                               putStrLn "Enter orientation (H for horizontal and V for vertical)"
+                               orientation <- getLine
+                               -- check if word addition is possible 
+                               -- check if word is valid from DictSearch
+                               let score = calcScore word
+                               putStrLn "Score for the word " ++ show(score) ++" ! "
+                               if orientation == "H"
+                                then do
+                                    let newboard = putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                                    return ()
+                                else do
+                                    newboard = putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
+                                    return () 
+                               putStrLn "Modified Board is .............."
+                               printBoard newboard
+
+
 
 gameWithComputer initialBoard = do
     putStrLn "Enter 1 to display Board"
@@ -84,6 +126,7 @@ gameWithComputer initialBoard = do
             then do 
                 printBoard initialBoard
                 return ()
+                gameWithComputer initialBoard
         else
             if line == "2"
                 then do
@@ -93,8 +136,18 @@ gameWithComputer initialBoard = do
                     coordinate <- getLine
                     putStrLn "Enter orientation (H for horizontal and V for vertical)"
                     orientation <- getLine
-                    -- newboard = addWord initialBoard word coordinate orientation
-                    game2Player newboard
+                    --check if word addition is possible
+                    -- check if word is correct    
+                    if orientation == "H"
+                        then do
+                            let newboard = putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                            return ()
+                    else do
+                            newboard = putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
+                            return () 
+                    putStrLn "Modified Board is .............."
+                    printBoard newboard
+                    gameWithComputer newboard
                 else
                     do 
                        putStrLn "Enter 7 letters for me to form a word"
@@ -104,8 +157,21 @@ gameWithComputer initialBoard = do
                                 putStrLn "Game Over as you didn't enter 7 letters"
                        else 
                             return ()
-                    --    form possible words , score calculation and adding word to Board 
+                    --    form possible words  
+                    --    score calculation 
+                    --    sorting of words according to score
+                        
                        return () 
+                       if orientation == "H"
+                         then do
+                            let newboard = putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                            return ()
+                         else do
+                            newboard = putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
+                            return () 
+                        putStrLn "Modified Board is .............."
+                        printBoard newboard
+                        gameWithComputer newboard
                                  
 
 
