@@ -5,6 +5,7 @@ module Scrabble (
    module DictSearch,
    module Change_Board, 
    module Board_new,
+   module Valid_entry,
 --    module Filter,
    randomChar,
    input,
@@ -14,6 +15,7 @@ module Scrabble (
    listOfTuplesV,
 ) where
 
+import Valid_entry
 import Board_new
 import Points
 import Possible_permutations
@@ -33,6 +35,8 @@ import Data.Char
 
 randomChar :: Int->Char
 randomChar x =  ['a'..'z'] !! (mod x 26) 
+
+-- listOfPoints ((a,c),(b,d)) =  [(x,y) | x <- [a..b] , y <- [c..d]] 
 
 main = do   
     putStrLn "****************SCRABBLE*******************"
@@ -80,16 +84,58 @@ game2Player initialBoard = do
                              putStrLn "Enter orientation (H for horizontal and V for vertical)"
                              orientation <- getLine
                             --  let orientation = read orientation' :: Char
+                             
                              -- check if word addition is possible there
                              -- check if word is correct
                              if orientation == "H"
                                 then do
+                                    --Checks if the word is in dictionary
+                                    if search word == True
+                                        then do
+                                            putStrLn "Right word"
+                                            return ()
+                                        else do
+                                            putStrLn "word not found in dictionary"
+                                            printBoard initialBoard
+                                            game2Player initialBoard
+
+                                    --Checks if the new word added is overwriting the board
+                                    if check initialBoard (listOfPoints (coordinate,(fst(coordinate),snd(coordinate) + length (word) -1))) word == True
+                                        then do 
+                                            putStrLn "right"
+                                            return ()
+                                        else do
+                                            putStrLn "Wrong addition of word"
+                                            printBoard initialBoard
+                                            game2Player initialBoard
+                                            return ()
+
                                     putStrLn "Modified Board is .............."
                                     printBoard $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
                                     --return ()
                                     game2Player $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
                                     return ()
                                 else do
+                                    --Checks if the word is in dictionary
+                                    if search word == True
+                                        then do
+                                            putStrLn "Right word"
+                                            return ()
+                                        else do
+                                            putStrLn "Word not found in dictionary"
+                                            printBoard initialBoard
+                                            game2Player initialBoard
+
+                                    --Checks if the new word added is overwriting the board
+                                    if check initialBoard (listOfPoints (coordinate,(fst(coordinate)  + length (word) -1,snd(coordinate)))) word == True
+                                        then do 
+                                            putStrLn "right"
+                                            return ()
+                                        else do
+                                            putStrLn "Wrong addition of word"
+                                            printBoard initialBoard
+                                            game2Player initialBoard
+                                            return ()
                                     putStrLn "Modified Board is .............."
                                     printBoard $ putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
                                     --return ()
@@ -116,13 +162,63 @@ game2Player initialBoard = do
                                putStrLn msg
                                if orientation == "H"
                                 then do
+                                    --Checks if the word is in dictionary
+                                    if search word == True
+                                        then do
+                                            putStrLn "Right word"
+                                            return ()
+                                        else do
+                                            putStrLn "word not found in dictionary"
+                                            printBoard initialBoard
+                                            game2Player initialBoard
+
+                                    --Checks if the new word added is overwriting the board
+                                    if check initialBoard (listOfPoints (coordinate,(fst(coordinate),snd(coordinate) + length (word) -1))) word == True
+                                        then do 
+                                            putStrLn "right"
+                                            return ()
+                                        else do
+                                            putStrLn "Wrong addition of word"
+                                            printBoard initialBoard
+                                            game2Player initialBoard
+                                            return ()
+                                    
                                     putStrLn "Modified Board is .............."
                                     printBoard $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                                    
+                                    -- score calculation
+                                    let score = (show ( calcScore word)) ++ "is the score"
+                                    putStrLn score
+
+                                    game2Player $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
                                     return ()
                                 else do
+                                    --Checks if the word is in dictionary
+                                    if search word == True
+                                        then do
+                                            putStrLn "Right word"
+                                            return ()
+                                        else do
+                                            putStrLn "word not found in dictionary"
+                                            printBoard initialBoard
+                                            game2Player initialBoard
+
+                                    --Checks if the new word added is overwriting the board
+                                    if check initialBoard (listOfPoints (coordinate,(fst(coordinate)  + length (word) -1,snd(coordinate)))) word == True
+                                        then do 
+                                            putStrLn "right"
+                                            return ()
+                                        else do
+                                            putStrLn "Wrong addition of word"
+                                            printBoard initialBoard
+                                            game2Player initialBoard
+                                            return ()
                                     putStrLn "Modified Board is .............."
                                     printBoard $ putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
+                                    -- return () 
+                                    game2Player $ putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
                                     return () 
+                                    
                                return ()
 
 listOfPoints ((a,c),(b,d)) =  [(x,y) | x <- [a..b] , y <- [c..d]] 
@@ -153,13 +249,33 @@ gameWithComputer initialBoard = do
                     -- let orientation = read orientation' :: Char
                     --check if word addition is possible
                     -- check if word is correct    
-                    if orientation == 'H'
+                    if orientation == "H"
                         then do
+                            --Checks if the new word added is overwriting the board
+                            if check initialBoard (listOfPoints (coordinate,(fst(coordinate),snd(coordinate) + length (word) -1))) word == True
+                                then do 
+                                    putStrLn "right"
+                                    return ()
+                                else do
+                                    putStrLn "Wrong addition of word"
+                                    printBoard initialBoard
+                                    game2Player initialBoard
+                                    return ()
                             putStrLn "Modified Board is .............."
                             printBoard $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
                             gameWithComputer $ putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
                             return ()
                     else do
+                            --Checks if the new word added is overwriting the board
+                            if check initialBoard (listOfPoints (coordinate,(fst(coordinate)  + length (word) -1,snd(coordinate)))) word == True
+                                then do 
+                                    putStrLn "right"
+                                    return ()
+                                else do
+                                    putStrLn "Wrong addition of word"
+                                    printBoard initialBoard
+                                    game2Player initialBoard
+                                    return ()
                             putStrLn "Modified Board is .............."
                             printBoard $ putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
                             gameWithComputer $ putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
