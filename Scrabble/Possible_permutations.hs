@@ -7,14 +7,17 @@ module Possible_permutations
     firstList,
     getACombin,
     genPossibleFilling,
+    delete',
+    permutations',
 )
 where
-    import Data.List
-    import Board_new
+    
+import Data.List
+import Board_new
 
 --This function finds the points that are not filled and returns a list of them
 findEmptyPoints :: [((Int,Int),Char)]->[((Int,Int),Char)]
-findEmptyPoints pointAndStatus = [(point,status)|(point, status)<-pointAndStatus, status == '*']     --Checked
+findEmptyPoints pointAndStatus = [(point,status)|(point,status) <- pointAndStatus, status == '*']     --Checked
 
 --This function finds and returns a list of all the points that are filled
 findNonEmptyPoints :: [((Int,Int),Char)]->[((Int,Int),Char)]
@@ -44,4 +47,5 @@ findAllPermutations pointAndStatus listOfPossChars = do
                                                      map (++ ys) possFills
 
 delete' x xs = [y | y <- xs , y /= x]
+
 permutations' xs = if length xs == 0 then [[]] else [x:ys | x <- xs, ys <- permutations' $ delete' x xs]

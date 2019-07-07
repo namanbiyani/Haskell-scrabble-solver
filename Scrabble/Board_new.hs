@@ -21,7 +21,7 @@
 import Data.List
 
 --datatype of a board
-type Board = [((Integer,Integer),Char)]
+type Board = [((Int,Int),Char)]
 
 rows = 13
 columns = 13
@@ -71,7 +71,7 @@ strBoard :: [(a1, a2)] -> [[[a2]]]
 strBoard board = splitEvery rows ([[snd (board !! n)] | n <- [0..168]])
 
 --converts string to board with UI
-showBoard :: [((Integer,Integer),Char)] -> String
+showBoard :: [((Int,Int),Char)] -> String
 showBoard  board = let strb = strBoard board
                        rowsep = "\n" ++ (concat $ replicate 13 "+---") ++ "+\n"
                        output = intercalate rowsep $ map (\x ->"| " ++ (intercalate " | " x) ++ " |") strb
@@ -88,5 +88,5 @@ splitEvery :: Int -> [a] -> [[a]]
 splitEvery n = takeWhile (not.null) . map (take n) . iterate (drop n)
 
 --function to print board
-printBoard :: [((Integer, Integer), Char)] -> IO ()
+printBoard :: [((Int, Int), Char)] -> IO ()
 printBoard board = putStrLn( showBoard board )
