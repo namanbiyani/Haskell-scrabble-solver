@@ -78,11 +78,11 @@ game2Player initialBoard = do
                              coordinate' <- getLine
                              let coordinate = read coordinate' :: (Int,Int)
                              putStrLn "Enter orientation (H for horizontal and V for vertical)"
-                             orientation' <- getLine
-                             let orientation = read orientation' :: Char
+                             orientation <- getLine
+                            --  let orientation = read orientation' :: Char
                              -- check if word addition is possible there
                              -- check if word is correct
-                             if orientation == 'H'
+                             if orientation == "H"
                                 then do
                                     putStrLn "Modified Board is .............."
                                     printBoard $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
@@ -107,14 +107,14 @@ game2Player initialBoard = do
                                coordinate' <- getLine
                                let coordinate = read coordinate' :: (Int,Int)
                                putStrLn "Enter orientation (H for horizontal and V for vertical)"
-                               orientation' <- getLine
-                               let orientation = read orientation' :: Char
+                               orientation <- getLine
+                            --    let orientation = read orientation' :: Char
                                -- check if word addition is possible 
                                -- check if word is valid from DictSearch
                                let score = calcScore word
                                let msg = "Score for the word " ++ show(score) ++ " ! "
                                putStrLn msg
-                               if orientation == 'H'
+                               if orientation == "H"
                                 then do
                                     putStrLn "Modified Board is .............."
                                     printBoard $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
@@ -149,8 +149,8 @@ gameWithComputer initialBoard = do
                     coordinate' <- getLine
                     let coordinate = read coordinate' :: (Int,Int)
                     putStrLn "Enter orientation (H for horizontal and V for vertical)"
-                    orientation' <- getLine
-                    let orientation = read orientation' :: Char
+                    orientation <- getLine
+                    -- let orientation = read orientation' :: Char
                     --check if word addition is possible
                     -- check if word is correct    
                     if orientation == 'H'
