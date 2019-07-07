@@ -308,11 +308,12 @@ gameWithComputer initialBoard = do
                             then do 
                                 putStrLn "Game Over as you didn't enter 7 letters"
                                 gameWithComputer initialBoard
-                       else 
+                       else do
                             return ()
-                    --    form possible words  
-                    --    score calculation 
-                    --    sorting of words according to score
+                       
+                    --    filter tuples
+                    --    Find possible words from tuples
+                    --    Sort words according to score
                         
                        return () 
                        -- if orientation == 'H'
