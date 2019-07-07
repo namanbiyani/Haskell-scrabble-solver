@@ -81,6 +81,7 @@ showBoard  board = let strb = strBoard board
 boardPoints = [(x,y) | x <- [0..12], y <- [0..12] ]
 
 -- initial board which contains * at all coordinate points
+initialBoard :: [((Int, Int), Char)]
 initialBoard = [(x,'*') | x <- boardPoints]
 
 -- function which will print a string into substrings of size = no of columns of the board

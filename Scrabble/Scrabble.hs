@@ -5,7 +5,6 @@ module Scrabble (
    module DictSearch,
    module Change_Board, 
    module Board_new,
-   module Bonus,
 --    module Filter,
    randomChar,
    input,
@@ -27,6 +26,7 @@ import Data.List
 import System.IO
 import System.IO.Unsafe
 import Data.Char
+-- import Bonus
 
 --putWordAcrs function , (Integer,Integer,Integer) -> [Char] -> [((Integer,Integer),Char)] -> [((Integer,Integer),Char)]
 --putWordDown :: (Integer,Integer,Integer) -> [Char] -> [((Integer,Integer),Char)] -> [((Integer,Integer),Char)]
@@ -56,6 +56,7 @@ main = do
                           main
                           return()
 
+game2Player :: [((Int, Int), Char)] -> IO ()
 game2Player initialBoard = do
         putStrLn "Enter 1 to display Board"
         putStrLn "Enter 2 to add a word to the existing Board"
@@ -66,6 +67,7 @@ game2Player initialBoard = do
             else if line == "1"
                 then do 
                         printBoard initialBoard
+                        game2Player initialBoard
                         return ()
                 else
                      if line == "2"
@@ -82,18 +84,22 @@ game2Player initialBoard = do
                              -- check if word is correct
                              if orientation == 'H'
                                 then do
-                                    let newboard = putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                                    putStrLn "Modified Board is .............."
+                                    printBoard $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                                    --return ()
+                                    game2Player $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
                                     return ()
                                 else do
-                                    let newboard = putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
+                                    putStrLn "Modified Board is .............."
+                                    printBoard $ putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
+                                    --return ()
+                                    game2Player $ putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
                                     return () 
-                             putStrLn "Modified Board is .............."
-                             printBoard newboard
-                             game2Player newboard
+                             return () 
                         else
                             do putStrLn "Form a word using the table and the following words"
                                printBoard initialBoard
-                               let input' = input
+                               let input' = input !! 0
                                putStrLn input'
                                putStrLn "Enter your word : "
                                word <- getLine
@@ -110,13 +116,14 @@ game2Player initialBoard = do
                                putStrLn msg
                                if orientation == 'H'
                                 then do
-                                    let newboard = putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                                    putStrLn "Modified Board is .............."
+                                    printBoard $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
                                     return ()
                                 else do
-                                    let newboard = putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
+                                    putStrLn "Modified Board is .............."
+                                    printBoard $ putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
                                     return () 
-                               putStrLn "Modified Board is .............."
-                               printBoard newboard
+                               return ()
 
 listOfPoints ((a,c),(b,d)) =  [(x,y) | x <- [a..b] , y <- [c..d]] 
 
@@ -148,14 +155,16 @@ gameWithComputer initialBoard = do
                     -- check if word is correct    
                     if orientation == 'H'
                         then do
-                            let newboard = putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                            putStrLn "Modified Board is .............."
+                            printBoard $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                            gameWithComputer $ putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
                             return ()
                     else do
-                            let newboard = putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
+                            putStrLn "Modified Board is .............."
+                            printBoard $ putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
+                            gameWithComputer $ putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
                             return () 
-                    putStrLn "Modified Board is .............."
-                    printBoard newboard
-                    gameWithComputer newboard
+                    return ()
                 else
                     do 
                        putStrLn "Enter 7 letters for me to form a word"
@@ -170,36 +179,37 @@ gameWithComputer initialBoard = do
                     --    sorting of words according to score
                         
                        return () 
-                       if orientation == 'H'
-                         then do
-                            let newboard = putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
-                            putStrLn "Modified Board is .............."
-                            printBoard newboard
-                            gameWithComputer newboard
-                            return ()
-                         else do
-                            let newboard = putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
-                            putStrLn "Modified Board is .............."
-                            printBoard newboard
-                            gameWithComputer newboard
-                            return () 
+                       -- if orientation == 'H'
+                       --   then do
+                       --      putStrLn "Modified Board is .............."
+                       --      printBoard $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                       --      gameWithComputer $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                       --      return ()
+                       --   else do
+                       --      putStrLn "Modified Board is .............."
+                       --      printBoard $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                       --      gameWithComputer $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                       --      return () 
                        
-            
-                                 
-
-
+          
                                
-
-input:: IO ()
+input:: [[Char]]
 input = do
-    num1 <- randomIO :: IO Int
-    num2 <- randomIO :: IO Int
-    num3 <- randomIO :: IO Int
-    num4 <- randomIO :: IO Int
-    num5 <- randomIO :: IO Int
-    num6 <- randomIO :: IO Int
-    num7 <- randomIO :: IO Int
-    print $ [randomChar num1 , randomChar num2 , randomChar num3,randomChar num4,randomChar num5,randomChar num6,randomChar num7]
+    -- num1 <- randomIO :: IO Int
+    -- num2 <- randomIO :: IO Int
+    -- num3 <- randomIO :: IO Int
+    -- num4 <- randomIO :: IO Int
+    -- num5 <- randomIO :: IO Int
+    -- num6 <- randomIO :: IO Int
+    -- num7 <- randomIO :: IO Int
+    let num1 = unsafePerformIO (getStdRandom (randomR (0, 25)))
+    let num2 = unsafePerformIO (getStdRandom (randomR (0, 25)))
+    let num3 = unsafePerformIO (getStdRandom (randomR (0, 25)))
+    let num4 = unsafePerformIO (getStdRandom (randomR (0, 25)))
+    let num5 = unsafePerformIO (getStdRandom (randomR (0, 25)))
+    let num6 = unsafePerformIO (getStdRandom (randomR (0, 25)))
+    let num7 = unsafePerformIO (getStdRandom (randomR (0, 25)))
+    return [randomChar num1 , randomChar num2 , randomChar num3,randomChar num4,randomChar num5,randomChar num6,randomChar num7]
 
 -- list of horizontal tuples , eg ((5,3),(8,3))
 listOfTuplesH = [((a,b),(a,c)) | a <- [0..12] , b <- [0..12] , c <- [0..12], c - b > 1]

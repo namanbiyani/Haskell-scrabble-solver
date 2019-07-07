@@ -1,4 +1,4 @@
-module Points
+module Bonus
   (
       module Board_new,
       getScore,
