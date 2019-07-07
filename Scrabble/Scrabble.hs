@@ -6,6 +6,7 @@ module Scrabble (
    module Change_Board, 
    module Board_new,
    module Valid_entry,
+   module Filter,
 --    module Filter,
    randomChar,
    input,
@@ -16,15 +17,14 @@ module Scrabble (
 ) where
 
 import Valid_entry
+import Filter
 import Board_new
 import Points
 import Possible_permutations
 import DictSearch
--- import Filter
 import Change_Board
 import System.Random
 import Data.List
--- import Data.Map
 import System.IO
 import System.IO.Unsafe
 import Data.Char
@@ -145,8 +145,8 @@ game2Player initialBoard = do
                         else
                             do putStrLn "Form a word using the table and the following words"
                                printBoard initialBoard
-                               let input' = input !! 0
-                               putStrLn input'
+                            --    let input' = input !! 0
+                               putStrLn (input !! 0)
                                putStrLn "Enter your word : "
                                word <- getLine
                                putStrLn "Enter coordinate of the starting index of the word ( (0,0) denotes \nthe top left box and (12,12) denotes the bottom right box"
@@ -247,25 +247,44 @@ gameWithComputer initialBoard = do
                     putStrLn "Enter orientation (H for horizontal and V for vertical)"
                     orientation <- getLine
                     -- let orientation = read orientation' :: Char
-                    --check if word addition is possible
-                    -- check if word is correct    
+                    
                     if orientation == "H"
                         then do
+                            --Checks if the word is in dictionary
+                                if search word == True
+                                    then do
+                                        putStrLn "Right word"
+                                        return ()
+                                    else do
+                                        putStrLn "word not found in dictionary"
+                                        printBoard initialBoard
+                                        gameWithComputer initialBoard
+
                             --Checks if the new word added is overwriting the board
-                            if check initialBoard (listOfPoints (coordinate,(fst(coordinate),snd(coordinate) + length (word) -1))) word == True
-                                then do 
-                                    putStrLn "right"
+                                if check initialBoard (listOfPoints (coordinate,(fst(coordinate),snd(coordinate) + length (word) -1))) word == True
+                                    then do 
+                                        putStrLn "right"
+                                        return ()
+                                    else do
+                                        putStrLn "Wrong addition of word"
+                                        printBoard initialBoard
+                                        gameWithComputer initialBoard
+                                        return ()
+                                putStrLn "Modified Board is .............."
+                                printBoard $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                                gameWithComputer $ putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate))word initialBoard
+                                return ()
+                    else do
+                            --Checks if the word is in dictionary
+                            if search word == True
+                                then do
+                                    putStrLn "Right word"
                                     return ()
                                 else do
-                                    putStrLn "Wrong addition of word"
+                                    putStrLn "word not found in dictionary"
                                     printBoard initialBoard
-                                    game2Player initialBoard
-                                    return ()
-                            putStrLn "Modified Board is .............."
-                            printBoard $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
-                            gameWithComputer $ putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
-                            return ()
-                    else do
+                                    gameWithComputer initialBoard
+
                             --Checks if the new word added is overwriting the board
                             if check initialBoard (listOfPoints (coordinate,(fst(coordinate)  + length (word) -1,snd(coordinate)))) word == True
                                 then do 
@@ -274,7 +293,7 @@ gameWithComputer initialBoard = do
                                 else do
                                     putStrLn "Wrong addition of word"
                                     printBoard initialBoard
-                                    game2Player initialBoard
+                                    gameWithComputer initialBoard
                                     return ()
                             putStrLn "Modified Board is .............."
                             printBoard $ putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
@@ -288,6 +307,7 @@ gameWithComputer initialBoard = do
                        if (length letters) /= 7
                             then do 
                                 putStrLn "Game Over as you didn't enter 7 letters"
+                                gameWithComputer initialBoard
                        else 
                             return ()
                     --    form possible words  
@@ -308,16 +328,9 @@ gameWithComputer initialBoard = do
                        --      return () 
                        
           
-                               
+--generates 7 random letters                               
 input:: [[Char]]
 input = do
-    -- num1 <- randomIO :: IO Int
-    -- num2 <- randomIO :: IO Int
-    -- num3 <- randomIO :: IO Int
-    -- num4 <- randomIO :: IO Int
-    -- num5 <- randomIO :: IO Int
-    -- num6 <- randomIO :: IO Int
-    -- num7 <- randomIO :: IO Int
     let num1 = unsafePerformIO (getStdRandom (randomR (0, 25)))
     let num2 = unsafePerformIO (getStdRandom (randomR (0, 25)))
     let num3 = unsafePerformIO (getStdRandom (randomR (0, 25)))
@@ -329,6 +342,7 @@ input = do
 
 -- list of horizontal tuples , eg ((5,3),(8,3))
 listOfTuplesH = [((a,b),(a,c)) | a <- [0..12] , b <- [0..12] , c <- [0..12], c - b > 1]
+
 -- list of vertical tuples , eg (()) 
 listOfTuplesV = [((b,a),(c,a)) | a <- [0..12] , b <- [0..12] , c <- [0..12], c - b > 1]
 
