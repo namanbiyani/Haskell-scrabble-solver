@@ -91,6 +91,15 @@ module Scrabble (
                               if orientation == "H"
                                  then do
                                      --Checks if the word is in dictionary
+                                     if (snd(coordinate) + length(word)) > 12 
+                                        then do
+                                            putStrLn "Word cannot be fitted in the board"
+                                            game2Player initialBoard
+                                            return ()
+                                        else do
+                                            putStrLn "Word can be fitted in the board"
+                                            return ()
+                                        
                                      if search word == True
                                          then do
                                              putStrLn "Right word"
@@ -117,6 +126,15 @@ module Scrabble (
                                      game2Player $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
                                      return ()
                                  else do
+                                     if (fst(coordinate) + length(word)) > 12 
+                                         then do
+                                             putStrLn "Word cannot be fitted in the board"
+                                             game2Player initialBoard
+                                             return ()
+                                         else do
+                                             putStrLn "Word can be fitted in the board"
+                                             return ()
+                                        
                                      --Checks if the word is in dictionary
                                      if search word == True
                                          then do
@@ -163,6 +181,15 @@ module Scrabble (
                                 putStrLn msg
                                 if orientation == "H"
                                  then do
+                                     if (snd(coordinate) + length(word)) > 12 
+                                         then do
+                                             putStrLn "Word cannot be fitted in the board"
+                                             game2Player initialBoard
+                                             return ()
+                                         else do
+                                             putStrLn "Word can be fitted in the board"
+                                             return ()
+                                        
                                      --Checks if the word is in dictionary
                                      if search word == True
                                          then do
@@ -194,6 +221,15 @@ module Scrabble (
                                      game2Player $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
                                      return ()
                                  else do
+                                     if (snd(coordinate) + length(word)) > 12 
+                                         then do
+                                             putStrLn "Word cannot be fitted in the board"
+                                             game2Player initialBoard
+                                             return ()
+                                         else do
+                                             putStrLn "Word can be fitted in the board"
+                                             return ()
+                                         
                                      --Checks if the word is in dictionary
                                      if search word == True
                                          then do
@@ -228,6 +264,9 @@ module Scrabble (
  
  listOfPoints ((a,c),(b,d)) =  [(x,y) | x <- [a..b] , y <- [c..d]] 
  
+ strToPrint :: [[String]] -> [[IO ()]]
+ strToPrint strs = map (map putStrLn) strs 
+
  gameWithComputer initialBoard = do
      putStrLn "Enter 1 to display Board"
      putStrLn "Enter 2 to add a word to the existing Board"
@@ -255,6 +294,16 @@ module Scrabble (
                      
                      if orientation == "H"
                          then do
+                                 if (snd(coordinate) + length(word)) > 12 
+                                     then do
+                                         putStrLn "Word cannot be fitted in the board"
+                                         game2Player initialBoard
+                                         return ()
+                                     else do
+                                         putStrLn "Word can be fitted in the board"
+                                         return ()
+                                    
+
                              --Checks if the word is in dictionary
                                  if search word == True
                                      then do
@@ -318,6 +367,7 @@ module Scrabble (
                             do
                              return ()
                         let board = initialBoard
+
                         -- filters the tuples , returns a list of tuples [((int,int),(int.int))]
                         let rightTuplesH = (findPossTuples board listOfTuplesH 13)
                         let rightTuplesV = (findPossTuples board listOfTuplesV 13)                        
@@ -328,21 +378,26 @@ module Scrabble (
 
                         -- forms the words by first making a (Point,chat array of the tuple and then passing it to findAllPermutations)
                         -- naman . error - variable not in scope
-                        -- let words = [findAllPermutations (listOfP initialBoard tuple) letters | tuple <- rightTuples ]
-                        -- divyanshu . error - variable not in scope
-                        -- let words = map (findAllPermutations)  (map (listOfP) initialBoard rightTuples) letters
+                        let words = [findAllWords (listOfP initialBoard tuple) letters | tuple <- rightTuples ]
                         
-                        let words = ["cat","apple","dog","ghci","haskell"]
+                        --divyanshu . error - variable not in scope
+                        -- let words = map (findAllPermutations)  (map (listOfP) board rightTuples) letters
+                        -- words sahi arahe hai putSTrLn kaam nhi kar raha hai . dekhle
+                        -- strToPrint function is for printing [[[Char]]]
+                        strToPrint words
+                        
+                        -- niche wala hardcoded example chal raha hai
+                        -- let words = ["cat","apple","dog","ghci","haskell"]
                         --check if the words are in the dictionary 
-                        let correct_words = [word | word <- words , (search word) == True]
+                        -- let correct_words = [word | word <- words , (search word) == True]
                         
-                        putStrLn (correct_words !! 0)
+                        -- putStrLn (correct_words !! 0)
                      --    putStrLn rightTuples
                      --    putStrLn words
                         
                         -- sort the words according to their scores 
-                        let sorted = sortWords correct_words
-                        putStrLn (last sorted)    
+                        -- let sorted = sortWords correct_words
+                        -- putStrLn (last sorted)    
                         
                      --    score calculation 
                      --    sorting of words according to score
