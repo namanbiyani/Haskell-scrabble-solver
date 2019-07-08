@@ -28,6 +28,7 @@ module Scrabble (
  import System.IO
  import System.IO.Unsafe
  import Data.Char
+ import Data.Typeable
  -- import Bonus
  
  --putWordAcrs function , (Integer,Integer,Integer) -> [Char] -> [((Integer,Integer),Char)] -> [((Integer,Integer),Char)]
@@ -264,8 +265,15 @@ module Scrabble (
  
  listOfPoints ((a,c),(b,d)) =  [(x,y) | x <- [a..b] , y <- [c..d]] 
  
- strToPrint :: [[String]] -> [[IO ()]]
- strToPrint strs = map (map putStrLn) strs 
+--  strToPrint :: [[String]] -> [[IO ()]]
+-- strToPrint strs = map (map putStrLn) (strs) 
+
+
+
+--         uniq :: Eq a => [a] -> [a]
+-- uniq [] = []
+-- uniq (x:xs) = x : uniq (filter (/=x) xs)
+ unique = reverse . nub . reverse
 
  gameWithComputer initialBoard = do
      putStrLn "Enter 1 to display Board"
@@ -297,7 +305,7 @@ module Scrabble (
                                  if (snd(coordinate) + length(word)) > 12 
                                      then do
                                          putStrLn "Word cannot be fitted in the board"
-                                         game2Player initialBoard
+                                         gameWithComputer initialBoard
                                          return ()
                                      else do
                                          putStrLn "Word can be fitted in the board"
@@ -376,34 +384,43 @@ module Scrabble (
                         -- finding list of points for all
 
 
-                        -- forms the words by first making a (Point,chat array of the tuple and then passing it to findAllPermutations)
+                        -- forms the words by first making a (Point,char array of the tuple and then passing it to findAllPermutations)
                         -- naman . error - variable not in scope
-                        let words = [findAllWords (listOfP initialBoard tuple) letters | tuple <- rightTuples ]
-                        
+                        let words = unique $ concat $ [findAllWords (listOfP initialBoard tuple) letters | tuple <- rightTuples ]
+                        print [findAllWords (listOfP initialBoard tuple) letters | tuple <- rightTuples ]
+                        print words
+                        putStrLn "Found Words"
                         --divyanshu . error - variable not in scope
                         -- let words = map (findAllPermutations)  (map (listOfP) board rightTuples) letters
                         -- words sahi arahe hai putSTrLn kaam nhi kar raha hai . dekhle
                         -- strToPrint function is for printing [[[Char]]]
-                        strToPrint words
+                         --strToPrint words
+                        --  $ unique $ concat words
+                        --print words
                         
                         -- niche wala hardcoded example chal raha hai
-                        -- let words = ["cat","apple","dog","ghci","haskell"]
+                        --let words = ["cat","apple","dog","ghci","haskell"]
                         --check if the words are in the dictionary 
-                        -- let correct_words = [word | word <- words , (search word) == True]
+                        let correct_words = [word | word <- words , (search word) == True]
+                        print correct_words
+                        putStrLn "Correct Words"
+
                         
                         -- putStrLn (correct_words !! 0)
                      --    putStrLn rightTuples
                      --    putStrLn words
                         
                         -- sort the words according to their scores 
-                        -- let sorted = sortWords correct_words
-                        -- putStrLn (last sorted)    
+                        let sorted = sortWords correct_words
+                        putStrLn "Sorted"
+                        putStrLn (last sorted)    
                         
                      --    score calculation 
                      --    sorting of words according to score
                      --    finding orientation of the word
                          
                         return () 
+                        putStrLn "maa chuda"
                         let coordinate = (2,2)
                         let word = "apple"
                         let orientation = "H"
