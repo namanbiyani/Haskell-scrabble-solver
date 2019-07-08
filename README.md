@@ -42,4 +42,4 @@ It asks for 7 letters which it should use to construct the word on the board.
 
 The Computer constructs the word which will give a maximum score from these letters on the board and writes it on the board.
 
-![New Board](/images/playpc_3)
+![New Board](/images/playpc_3.png)
