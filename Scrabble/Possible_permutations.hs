@@ -52,8 +52,12 @@ findAllPermutations pointAndStatus listOfPossChars = do
 delete' :: Eq a => a -> [a] -> [a]
 delete' x xs = [y | y <- xs , y /= x]
 
-
+-- permutation of string
 permutations' :: Eq a => [a] -> [[a]]
 permutations' xs = if length xs == 0 then [[]] else [x:ys | x <- xs, ys <- permutations' $ delete' x xs]
 
+-- takes a tuple and gives a list of (point,char)
+listOfP board ((a,b),(c,d)) = [board !! (13*x + y) | (x,y) <- listOfPoint ((a,b),(c,d))]
 
+-- takes a tuple and gives a list of points
+listOfPoint ((a,c),(b,d)) =  [(x,y) | x <- [a..b] , y <- [c..d]]
