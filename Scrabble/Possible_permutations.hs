@@ -50,7 +50,7 @@ findAllPermutations pointAndStatus listOfPossChars = do
                                                      let xs = findEmptyPoints pointAndStatus
                                                      let ys = findNonEmptyPoints pointAndStatus
                                                      let possFills = genPossibleFilling xs listOfPossChars
-                                                     map (++ ys) possFills
+                                                     [x ++ ys| x<- possFills] ++ [ys ++ x| x<-possFills]
 
 -- this Function is to be called from Scrabble.hs , it takes board and letters and gives the possible permutations
 findAllWords point_status letters = [word | word <- [formWord x | x <- (findAllPermutations point_status letters) ]]
