@@ -48,7 +48,11 @@ module Scrabble (
          then return ()  
          else if line == "1"
                  then do
-                         game2Player initialBoard
+                         let sa = 0
+                         let sb = 0
+                         let t = 0   
+                         let board = initialBoard
+                         game2Player $ board sa sb t
                          return ()
                  else
                       if line == "2"
@@ -62,8 +66,8 @@ module Scrabble (
                            return()
 
  
- game2Player :: [((Int, Int), Char)] -> IO ()
- game2Player initialBoard = do
+--  game2Player :: [((Int, Int), Char)] -> IO ()
+ game2Player initialBoard scoreA scoreB turn = do
          putStrLn "Enter 1 to display Board"
          putStrLn "Enter 2 to add a word to the existing Board"
          putStrLn "Enter 3 to start game "
@@ -72,8 +76,8 @@ module Scrabble (
              then return ()
              else if line == "1"
                  then do 
-                         printBoard initialBoard
-                         game2Player initialBoard
+                         printBoard initialBoard 
+                         game2Player $ initialBoard scoreA scoreB turn
                          return ()
                  else
                       if line == "2"
@@ -95,7 +99,7 @@ module Scrabble (
                                      if (snd(coordinate) + length(word)) > 12 
                                         then do
                                             putStrLn "Word cannot be fitted in the board"
-                                            game2Player initialBoard
+                                            game2Player $ initialBoard scoreA scoreB turn
                                             return ()
                                         else do
                                             putStrLn "Word can be fitted in the board"
@@ -108,7 +112,7 @@ module Scrabble (
                                          else do
                                              putStrLn "word not found in dictionary"
                                              printBoard initialBoard
-                                             game2Player initialBoard
+                                             game2Player $ initialBoard scoreA scoreB turn
  
                                      --Checks if the new word added is overwriting the board
                                      if check initialBoard (listOfPoints (coordinate,(fst(coordinate),snd(coordinate) + length (word) -1))) word == True
@@ -118,7 +122,7 @@ module Scrabble (
                                          else do
                                              putStrLn "Wrong addition of word"
                                              printBoard initialBoard
-                                             game2Player initialBoard
+                                             game2Player $ initialBoard scoreA scoreB turn
                                              return ()
  
                                      putStrLn "Modified Board is .............."
@@ -130,7 +134,7 @@ module Scrabble (
                                      if (fst(coordinate) + length(word)) > 12 
                                          then do
                                              putStrLn "Word cannot be fitted in the board"
-                                             game2Player initialBoard
+                                             game2Player $ initialBoard scoreA scoreB turn
                                              return ()
                                          else do
                                              putStrLn "Word can be fitted in the board"
@@ -144,7 +148,7 @@ module Scrabble (
                                          else do
                                              putStrLn "Word not found in dictionary"
                                              printBoard initialBoard
-                                             game2Player initialBoard
+                                             game2Player $ initialBoard scoreA scoreB turn
  
                                      --Checks if the new word added is overwriting the board
                                      if check initialBoard (listOfPoints (coordinate,(fst(coordinate)  + length (word) -1,snd(coordinate)))) word == True
@@ -154,16 +158,24 @@ module Scrabble (
                                          else do
                                              putStrLn "Wrong addition of word"
                                              printBoard initialBoard
-                                             game2Player initialBoard
+                                             game2Player $ initialBoard scoreA scoreB turn
                                              return ()
                                      putStrLn "Modified Board is .............."
                                      printBoard $ putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
                                      --return ()
-                                     game2Player $ putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
+                                     game2Player $ ((putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard) scoreA scoreB turn)
                                      return () 
                               return () 
                          else
-                             do putStrLn "Form a word using the table and the following words"
+                             do 
+                                -- let a = 
+                                let sa = "Score A = " ++ show(scoreA)
+                                let sb = "Score B = " ++ show(scoreB)
+                                print sa
+                                print sb
+                                if turn == 0 then print "Turn of player A" else print "Turn of player B"
+
+                                putStrLn "Form a word using the table and the following words"
                                 printBoard initialBoard
                              --    let input' = input !! 0
                                 putStrLn (input !! 0)
@@ -185,7 +197,7 @@ module Scrabble (
                                      if (snd(coordinate) + length(word)) > 12 
                                          then do
                                              putStrLn "Word cannot be fitted in the board"
-                                             game2Player initialBoard
+                                             game2Player $ initialBoard scoreA scoreB turn
                                              return ()
                                          else do
                                              putStrLn "Word can be fitted in the board"
@@ -199,7 +211,7 @@ module Scrabble (
                                          else do
                                              putStrLn "word not found in dictionary"
                                              printBoard initialBoard
-                                             game2Player initialBoard
+                                             game2Player $ initialBoard scoreA scoreB turn
  
                                      --Checks if the new word added is overwriting the board
                                      if check initialBoard (listOfPoints (coordinate,(fst(coordinate),snd(coordinate) + length (word) -1))) word == True
@@ -209,7 +221,7 @@ module Scrabble (
                                          else do
                                              putStrLn "Wrong addition of word"
                                              printBoard initialBoard
-                                             game2Player initialBoard
+                                             game2Player $ initialBoard scoreA scoreB turn
                                              return ()
                                      
                                      putStrLn "Modified Board is .............."
@@ -218,8 +230,22 @@ module Scrabble (
                                      -- score calculation
                                      let score = (show ( calcScore word)) ++ "is the score"
                                      putStrLn score
- 
-                                     game2Player $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                                     if turn == 0 
+                                        then do
+                                            let a = score + scoreA
+                                            let b = scoreB
+                                            let t = 1
+                                            print "New Score for A is " ++ show(a)
+                                            game2Player $ ((putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard)) a b t
+                                            return ()
+                                        else do
+                                            let a = scoreA
+                                            let b = score + scoreB
+                                            let t = 0
+                                            print "New Score for B is " ++ show(b)
+                                            game2Player $ ((putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1)) word initialBoard) a b t
+                                            return ()                                             
+                                 
                                      return ()
                                  else do
                                      if (snd(coordinate) + length(word)) > 12 
@@ -258,9 +284,22 @@ module Scrabble (
                                      -- score calculation
                                      let score = (show ( calcScore word)) ++ "is the score"
                                      putStrLn score
- 
-                                     game2Player $ putWordDown (fst(coordinate),fst(coordinate)+length(word)-1,snd(coordinate)) word initialBoard
-                                     return () 
+
+                                     if turn == 0 
+                                        then do
+                                            let a = score + scoreA
+                                            let b = scoreB
+                                            let t = 1
+                                            print "New Score for A is " ++ show(a)
+                                            game2Player $ ((putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard) a b t)
+                                            return ()
+                                        else do
+                                            let a = scoreA
+                                            let b = score + scoreB
+                                            let t = 0
+                                            print "New Score for B is " ++ show(b)
+                                            game2Player $ ((putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard) a b t)
+                                            return ()     
                                 return ()
  
  listOfPoints ((a,c),(b,d)) =  [(x,y) | x <- [a..b] , y <- [c..d]] 
