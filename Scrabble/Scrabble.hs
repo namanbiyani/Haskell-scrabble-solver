@@ -418,25 +418,73 @@ module Scrabble (
                      --    score calculation 
                      --    sorting of words according to score
                      --    finding orientation of the word
-                         
-                        return () 
-                        putStrLn "maa chuda"
-                        let coordinate = (2,2)
-                        let word = "apple"
-                        let orientation = "H"
-                        if orientation == "H"
-                          then do
-                             putStrLn "Modified Board is .............."
-                             printBoard $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
-                             gameWithComputer $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
-                             return ()
-                          else do
-                             putStrLn "Modified Board is .............."
-                             printBoard $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
-                             gameWithComputer $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
-                             return () 
                         
-           
+
+                        -- let sorted = sortWords correct_words
+                        -- putStrLn "Sorted"
+                        -- putStrLn (last sorted)    
+                        
+                        let best_word = last $ sorted
+                        let len = length $ best_word
+                        let tupleV = filterByLengthV len rightTuplesV
+                        let tupleH = filterByLengthH len rightTuplesH
+
+                        let righttuples = tupleH ++ tupleV
+                        let right_tuple = getRightTuple initialBoard best_word righttuples 
+                        print right_tuple
+
+                  --    score calculation 
+                  --    sorting of words according to score
+                  --    finding orientation of the word
+                      
+                    --  return () 
+                    --  putStrLn "maa chuda"
+                    --  let coordinate = (2,2)
+                    --  let word = "apple"
+                    --  let orientation = "H"
+                    --   if orientation == "H"
+                    --     then do
+                    --       putStrLn "Modified Board is .............."
+                    --       printBoard $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                    --       gameWithComputer $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                    --       return ()
+                    --     else do
+                    --       putStrLn "Modified Board is .............."
+                    --       printBoard $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                    --       gameWithComputer $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                    --       return ()
+                    --     return () 
+                        -- putStrLn "maa chuda"
+                        -- let coordinate = (2,2)
+                        -- let word = "apple"
+                        -- let orientation = "H"
+                        -- if orientation == "H"
+                        --   then do
+                        --      putStrLn "Modified Board is .............."
+                        --      printBoard $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                        --      gameWithComputer $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                        --      return ()
+                        --   else do
+                        --      putStrLn "Modified Board is .............."
+                        --      printBoard $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                        --      gameWithComputer $ putWordAcrs (fst(coordinate),snd(coordinate),snd(coordinate)+length(word)-1) word initialBoard
+                        --      return () 
+                        
+ filterByLengthH len tuples = [t | t <- tuples , len == (snd(snd(t)) - snd(fst(t)) + 1)]
+
+ filterByLengthV len tuples = [t | t <- tuples , len == (fst(snd(t)) - fst(fst(t)) + 1)]
+ -- checks whether at a coordinate pe * hai ya ohir word waka char hai
+ get' board char coord = if snd (board !! (13*fst(coord) + snd(coord))) == char || snd(board !! (13*fst  (coord) + snd(coord))) == '*' then True else False
+
+--listOfPoint takes a tuple and returns a list of points
+
+-- niche wala function dekh
+ checkTuple initialBoard tuple word = if (True `elem` checkTuple' initialBoard tuple word ) == True then True else False
+
+-- tuple ka list of points banayega aur phir har point ko check karega
+ checkTuple' initialBoard tuple word = [  get' initialBoard y x | x <- listOfPoint tuple , y <- word  , elemIndex x (listOfPoint tuple) == elemIndex y word ]
+
+ getRightTuple initialBoard word tuples = [tuple | tuple <- tuples , checkTuple initialBoard tuple word]          
  --generates 7 random letters                               
  input:: [[Char]]
  input = do
