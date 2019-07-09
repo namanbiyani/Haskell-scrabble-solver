@@ -314,6 +314,10 @@ module Scrabble (
 -- uniq (x:xs) = x : uniq (filter (/=x) xs)
  unique = reverse . nub . reverse
 
+filterByLengthH len tuples = [t | t <- tuple , len == (snd(snd(tuple)) - snd(fst(tuple)) + 1)]
+
+filterByLengthV len tuples = [t | t <- tuple , len == (fst(snd(tuple)) - fst(fst(tuple)) + 1)]
+
  gameWithComputer initialBoard = do
      putStrLn "Enter 1 to display Board"
      putStrLn "Enter 2 to add a word to the existing Board"
@@ -443,7 +447,7 @@ module Scrabble (
                         let correct_words = [word | word <- words , (search word) == True]
                         print correct_words
                         putStrLn "Correct Words"
-
+                                
                         
                         -- putStrLn (correct_words !! 0)
                      --    putStrLn rightTuples
@@ -454,6 +458,14 @@ module Scrabble (
                         putStrLn "Sorted"
                         putStrLn (last sorted)    
                         
+                        let best_word = last $ sorted
+                        let len = length $ best_word
+                        let tupleV = filterByLengthV len rightTuplesV
+                        let tupleH = filterByLengthH len rightTuplesH
+
+                        let righttuples = tupleH ++ tupleV
+                        let right_tuple = getRightTuple initialBoard best_word righttuples 
+
                      --    score calculation 
                      --    sorting of words according to score
                      --    finding orientation of the word
